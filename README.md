@@ -238,7 +238,7 @@ To debug the tests:
 Language Forge is built to run in a containerized environment.  For now, Kubernetes is the chosen runtime platform.  Deployments are automated under the right circumstances using GitHub Actions.
 
 ### Staging (QA) ###
-Staging deployments can be manually run with `VERSION=<some-docker-tag-or-semver> make deploy-staging`.
+Staging deployments can be manually run with `VERSION_APP=<some-docker-tag-or-semver> VERSION_PROXY=<some-docker-tag-or-semver> VERSION_NEXT_APP=<some-docker-tag-or-semver> make deploy-staging`.
 
 Current workflow:
 1. merge PR into or make commits on `develop` branch

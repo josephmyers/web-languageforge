@@ -1,0 +1,71 @@
+name: set-backlog-fields
+
+on:
+  issues:
+    types: [ opened ] ############ exclude pull requests and items that already have a Project
+
+  workflow_dispatch:
+
+jobs:
+  steve:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Generate token
+        id: generate_token
+        uses: tibdex/github-app-token@3bc28d706f1f8026f2d39c8fc790d4336bb1cf7e
+        with:
+          app_id: ${{ secrets.LFPROJECTBOARDAUTOMATION_APP_ID }}
+          private_key: ${{ secrets.LFPROJECTBOARDAUTOMATION_PRIVATE_KEY }}
+          
+      - name: get backlog field ID
+        env:
+          GITHUB_TOKEN: ${{ steps.generate_token.outputs.token }}
+          NUMBER: 1326
+          ORGANIZATION: sillsdev
+        run: |
+          echo issue $NUMBER created
+          
+          gh api graphql -f query='
+            query($org: String!) {
+              organization(login: $org){
+                projectNext(number: 1) {
+                  id
+                  fields(first:20) {
+                    nodes {
+                      id
+                      name
+                    }
+                  }
+                }
+              }
+            }' -f org=$ORGANIZATION > project_data.json
+            
+          echo 'FIELD='$(jq '.data.organization.projectNext.fields.nodes[] | select(.name== "Backlog") | .id' project_data.json) >> $GITHUB_ENV
+        
+      - name: set fields
+        run: |
+          gh api graphql -f query='
+            mutation(
+              $project:ID!
+              $item:ID!
+              $field: ID!
+              $field_value: String!)
+            {
+              addProjectNextItem(input: {projectId: $project, contentId: $item})
+              {
+                projectNextItem {
+                  id
+                }
+              }
+              updateProjectNextItemField(input: {
+                projectId: $project
+                itemId: $item
+                fieldId: $field
+                value: $field_value})
+              {
+                projectNextItem {
+                  id
+                }
+              }
+            }' -f project=1 -f item=$NUMBER -f field=$FIELD -f field_value=Triage
+            

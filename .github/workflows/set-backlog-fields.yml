@@ -10,18 +10,11 @@ jobs:
   steve:
     runs-on: ubuntu-latest
     steps:
-      - name: Generate token
-        id: generate_token
-        uses: tibdex/github-app-token@36464acb844fc53b9b8b2401da68844f6b05ebb0
-        with:
-          app_id: ${{ secrets.LFPROJECTBOARDAUTOMATION_APP_ID }}
-          private_key: ${{ secrets.LFPROJECTBOARDAUTOMATION_PRIVATE_KEY }}
-          
       - name: get backlog field ID
         env:
-          GITHUB_TOKEN: ${{ steps.generate_token.outputs.token }}
+          GITHUB_TOKEN: ${{ secrets.PERSONAL_TOKEN }}
           NUMBER: ${{ github.event.issue.number }}
-          ORGANIZATION: josephmyers ###############################
+          ORGANIZATION: josephmyers
         run: |
           echo issue $NUMBER created
           
@@ -43,6 +36,8 @@ jobs:
           echo 'FIELD='$(jq '.data.organization.projectNext.fields.nodes[] | select(.name== "Backlog") | .id' project_data.json) >> $GITHUB_ENV
         
       - name: set fields
+        env:
+          GITHUB_TOKEN: ${{ secrets.PERSONAL_TOKEN }}
         run: |
           gh api graphql -f query='
             mutation(

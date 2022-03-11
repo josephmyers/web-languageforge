@@ -20,7 +20,7 @@ jobs:
       - name: get backlog field ID
         env:
           GITHUB_TOKEN: ${{ steps.generate_token.outputs.token }}
-          NUMBER: 1326
+          NUMBER: ${{ github.event.issue.number }}
           ORGANIZATION: josephmyers ###############################
         run: |
           echo issue $NUMBER created

@@ -43,10 +43,8 @@ jobs:
         run: |
           gh api graphql -f query='
             query {
-              user(login: "josephmyers") {
-                node(id:"I_kwDOG-8sOc5FnmVL") {
-                  __typename
-                }
+              node(id:"I_kwDOG-8sOc5FnmVL") {
+                __typename
               }
             }'
               

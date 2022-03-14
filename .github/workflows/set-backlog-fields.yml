@@ -13,10 +13,10 @@ jobs:
       - name: get backlog field ID
         env:
           GITHUB_TOKEN: ${{ secrets.PERSONAL_TOKEN }}
-          NUMBER: ${{ github.event.issue.number }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
           ORGANIZATION: josephmyers
         run: |
-          echo issue $NUMBER created
+          echo issue $ISSUE_NUMBER created
           
           gh api graphql -f query='
             query($org: String!) {
@@ -33,7 +33,8 @@ jobs:
               }
             }' -f org=$ORGANIZATION > project_data.json
             
-          echo 'FIELD='$(jq '.data.user.projectNext.fields.nodes[] | select(.name== "Backlog") | .id' project_data.json) >> $GITHUB_ENV
+          echo 'PROJECT_ID='$(jq '.data.user.projectNext.id' project_data.json) >> $GITHUB_ENV
+          echo 'FIELD_ID='$(jq '.data.user.projectNext.fields.nodes[] | select(.name== "Backlog") | .id' project_data.json) >> $GITHUB_ENV
         
       - name: set fields
         env:
@@ -62,5 +63,5 @@ jobs:
                   id
                 }
               }
-            }' -f project=1 -f item=$NUMBER -f field=$FIELD -f field_value=Triage
+            }' -f project=$PROJECT_ID -f item=$ISSUE_NUMBER -f field=$FIELD_ID -f field_value=Triage
             

@@ -36,6 +36,21 @@ jobs:
           echo 'PROJECT_ID='$(jq '.data.user.projectNext.id' project_data.json) >> $GITHUB_ENV
           echo 'FIELD_ID='$(jq '.data.user.projectNext.fields.nodes[] | select(.name== "Backlog") | .id' project_data.json) >> $GITHUB_ENV
         
+      - name: can i find anything
+        env:
+          GITHUB_TOKEN: ${{ secrets.PERSONAL_TOKEN }}
+          CONTEXT_GITHUB: ${{ toJson(github) }}
+        run: |
+          gh api graphql -f query='
+            query {
+              user(login: "josephmyers") {
+                node(id:"I_kwDOG-8sOc5FnmVL") {
+                  __typename
+                }
+              }
+            }'
+              
+        
       - name: set fields
         env:
           GITHUB_TOKEN: ${{ secrets.PERSONAL_TOKEN }}

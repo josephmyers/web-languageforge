@@ -33,7 +33,7 @@ jobs:
               }
             }' -f org=$ORGANIZATION > project_data.json
             
-          echo 'FIELD='$(jq '.data.organization.projectNext.fields.nodes[] | select(.name== "Backlog") | .id' project_data.json) >> $GITHUB_ENV
+          echo 'FIELD='$(jq '.data.user.projectNext.fields.nodes[] | select(.name== "Backlog") | .id' project_data.json) >> $GITHUB_ENV
         
       - name: set fields
         env:

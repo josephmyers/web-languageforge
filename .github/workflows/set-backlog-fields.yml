@@ -14,7 +14,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.PERSONAL_TOKEN }}
           ISSUE_NUMBER: ${{ github.event.issue.number }}
-          ITEM_ID: ${{ github.event.issue.
           ORGANIZATION: josephmyers
         run: |
           echo issue $ISSUE_NUMBER created

@@ -42,6 +42,8 @@ jobs:
         run: |
           echo project id $PROJECT_ID
           echo backlog id $FIELD_ID
+          echo project id $PROJECT_ID
+          echo backlog id $FIELD_ID
           
           gh api graphql -f query='
             mutation(
@@ -50,7 +52,7 @@ jobs:
               $field: ID!
               $field_value: String!)
             {
-              set_status: updateProjectNextItemField(input: {
+              updateProjectNextItemField(input: {
                 projectId: $project
                 itemId: $item
                 fieldId: $field

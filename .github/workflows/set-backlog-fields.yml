@@ -36,10 +36,26 @@ jobs:
           echo 'PROJECT_ID='$(jq '.data.user.projectNext.id' project_data.json) >> $GITHUB_ENV
           echo 'FIELD_ID='$(jq '.data.user.projectNext.fields.nodes[] | select(.name== "Backlog") | .id' project_data.json) >> $GITHUB_ENV
         
-      - name: set fields
+      - name: Add issue to project
         env:
           GITHUB_TOKEN: ${{ secrets.PERSONAL_TOKEN }}
           CONTEXT_GITHUB: ${{ toJson(github) }}
+          ISSUE_ID: ${{ github.event.issue.node_id }}
+        run: |
+          item_id="$( gh api graphql -f query='
+            mutation($project:ID!, $item:ID!) {
+              addProjectNextItem(input: {projectId: $project, contentId: $item}) {
+                projectNextItem {
+                  id
+                }
+              }
+            }' -f project=$PROJECT_ID -f item=$ISSUE_ID --jq '.data.addProjectNextItem.projectNextItem.id')"
+          
+          echo 'ITEM_ID='$item_id >> $GITHUB_ENV
+          
+      - name: set fields
+        env:
+          GITHUB_TOKEN: ${{ secrets.PERSONAL_TOKEN }}
         run: |
           gh api graphql -f query='
             mutation(
@@ -48,15 +64,6 @@ jobs:
               $field: ID!
               $field_value: String!)
             {
-              addProjectNextItem(input: {
-                projectId: $project
-                contentId: $item})
-              {
-                projectNextItem {
-                  id
-                }
-              }
-              
               updateProjectNextItemField(input: {
                 projectId: $project
                 itemId: $item
@@ -67,5 +74,5 @@ jobs:
                   id
                 }
               }
-            }' -f project=$PROJECT_ID -f item=${{ github.event.issue.node_id }} -f field=$FIELD_ID -f field_value=Triage
+            }' -f project=$PROJECT_ID -f item=$ITEM_ID -f field=$FIELD_ID -f field_value=Triage
             

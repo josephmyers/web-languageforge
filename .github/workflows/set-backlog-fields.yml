@@ -36,19 +36,6 @@ jobs:
           echo 'PROJECT_ID='$(jq '.data.user.projectNext.id' project_data.json) >> $GITHUB_ENV
           echo 'FIELD_ID='$(jq '.data.user.projectNext.fields.nodes[] | select(.name== "Backlog") | .id' project_data.json) >> $GITHUB_ENV
         
-      - name: can i find anything
-        env:
-          GITHUB_TOKEN: ${{ secrets.PERSONAL_TOKEN }}
-          CONTEXT_GITHUB: ${{ toJson(github) }}
-        run: |
-          gh api graphql -f query='
-            query {
-              node(id:"I_kwDOG-8sOc5FnmVL") {
-                __typename
-              }
-            }'
-              
-        
       - name: set fields
         env:
           GITHUB_TOKEN: ${{ secrets.PERSONAL_TOKEN }}
@@ -61,6 +48,15 @@ jobs:
               $field: ID!
               $field_value: String!)
             {
+              addProjectNextItem(input: {
+                projectId: $project
+                contentId: $item})
+              {
+                projectNextItem {
+                  id
+                }
+              }
+              
               updateProjectNextItemField(input: {
                 projectId: $project
                 itemId: $item
@@ -71,5 +67,5 @@ jobs:
                   id
                 }
               }
-            }' -f project=$PROJECT_ID -f item="I_kwDOG-8sOc5FnmVL" -f field=$FIELD_ID -f field_value=Triage
+            }' -f project=$PROJECT_ID -f item=${{ github.event.issue.node_id }} -f field=$FIELD_ID -f field_value=Triage
             

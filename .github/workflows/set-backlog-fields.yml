@@ -33,7 +33,7 @@ jobs:
               }
             }' -f org=$ORGANIZATION > project_data.json
             
-          echo 'PROJECT_ID='$(jq '.data.user.projectNext.id' project_data.json) >> $GITHUB_ENV
+          echo 'PROJECT_ID='$(jq '.data.user' project_data.json) >> $GITHUB_ENV
           echo 'FIELD_ID='$(jq '.data.user.projectNext.fields.nodes[] | select(.name== "Backlog") | .id' project_data.json) >> $GITHUB_ENV
           
           echo project id $PROJECT_ID

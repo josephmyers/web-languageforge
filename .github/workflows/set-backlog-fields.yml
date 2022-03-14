@@ -14,13 +14,13 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.PERSONAL_TOKEN }}
           NUMBER: ${{ github.event.issue.number }}
-          ORGANIZATION: josephmyers ################# unused
+          ORGANIZATION: josephmyers
         run: |
           echo issue $NUMBER created
           
           gh api graphql -f query='
             query($org: String!) {
-              user(login: "josephmyers"){
+              user(login: $org){
                 projectNext(number: 1) {
                   id
                   fields(first:20) {

@@ -50,7 +50,7 @@ jobs:
               $field: ID!
               $field_value: String!)
             {
-              updateProjectNextItemField(input: {
+              set_status: updateProjectNextItemField(input: {
                 projectId: $project
                 itemId: $item
                 fieldId: $field

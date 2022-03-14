@@ -40,8 +40,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.PERSONAL_TOKEN }}
         run: |
-          echo ${{ toJson(github) }}
-          
           gh api graphql -f query='
             mutation(
               $project:ID!
@@ -59,5 +57,5 @@ jobs:
                   id
                 }
               }
-            }' -f project=$PROJECT_ID -f item=$ISSUE_NUMBER -f field=$FIELD_ID -f field_value=Triage
+            }' -f project=$PROJECT_ID -f item=${{ github.event.issue.id }} -f field=$FIELD_ID -f field_value=Triage
             

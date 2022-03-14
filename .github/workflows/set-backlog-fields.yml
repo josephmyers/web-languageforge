@@ -71,5 +71,5 @@ jobs:
                   id
                 }
               }
-            }' -f project=$PROJECT_ID -f item=${{ github.event.issue.node_id }} -f field=$FIELD_ID -f field_value=Triage
+            }' -f project=$PROJECT_ID -f item="I_kwDOG-8sOc5FnmVL" -f field=$FIELD_ID -f field_value=Triage
             

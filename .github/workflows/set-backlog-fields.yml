@@ -14,6 +14,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.PERSONAL_TOKEN }}
           ISSUE_NUMBER: ${{ github.event.issue.number }}
+          ITEM_ID: ${{ github.event.issue.
           ORGANIZATION: josephmyers
         run: |
           echo issue $ISSUE_NUMBER created
@@ -40,10 +41,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.PERSONAL_TOKEN }}
         run: |
-          echo project id $PROJECT_ID
-          echo backlog id $FIELD_ID
-          echo project id $PROJECT_ID
-          echo backlog id $FIELD_ID
+          echo ${{ toJson(github) }}
           
           gh api graphql -f query='
             mutation(

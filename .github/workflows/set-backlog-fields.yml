@@ -40,6 +40,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.PERSONAL_TOKEN }}
         run: |
+          echo ${{ toJson(github) }}
+        
           gh api graphql -f query='
             mutation(
               $project:ID!

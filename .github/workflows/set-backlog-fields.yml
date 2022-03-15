@@ -76,7 +76,7 @@ jobs:
           
       - name: set fields
         #if: ${{ IN_PROJECT }} == 0
-        if: ${{ GITHUB_TOKEN }}
+        if: env.GITHUB_TOKEN
         env:
           GITHUB_TOKEN: ${{ secrets.PERSONAL_TOKEN }}
         run: |

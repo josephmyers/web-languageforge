@@ -8,6 +8,7 @@ on:
 
 jobs:
   steve:
+    if: ${{ !github.event.issue.pull_request }}
     runs-on: ubuntu-latest
     steps:
       - name: get backlog field ID

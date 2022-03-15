@@ -36,7 +36,7 @@ jobs:
             
           echo 'PROJECT_ID='$(jq '.data.user.projectNext.id' project_data.json) >> $GITHUB_ENV
           echo 'FIELD_ID='$(jq '.data.user.projectNext.fields.nodes[] | select(.name== "Backlog") | .id' project_data.json) >> $GITHUB_ENV
-          echo 'TRIAGE_ID='$(jq '.data.user.projectNext.fields.nodes[] | select(.name== "Backlog") | .settings | fromjson.options[] | select(.name=="Triage") |.id' project_data.json) >> $GITHUB_ENV
+          echo 'TRIAGE_ID='$(jq '.data.user.projectNext.fields.nodes[] | select(.name== "Backlog") | .settings | fromjson.options[] | select(.name=="Triage") | .id' project_data.json) >> $GITHUB_ENV
         
       - name: Add issue to project
         env:
@@ -76,5 +76,5 @@ jobs:
                   id
                 }
               }
-            }' -f project=$PROJECT_ID -f item=$ITEM_ID -f field=$FIELD_ID -f field_value=$TRIAGE_ID
+            }' -f project=$PROJECT_ID -f item=$ITEM_ID -f field=$FIELD_ID -f field_value=${{ env.TRIAGE_ID }}
             

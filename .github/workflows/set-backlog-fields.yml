@@ -32,10 +32,6 @@ jobs:
           
           echo 'IN_PROJECT='$(jq '.data.repository.issue.id.projectNextItems[] | length > 0) | length' project_data.json) >> $GITHUB_ENV
     
-  do_it:
-    if: $IN_PROJECT == 0
-    runs-on: ubuntu-latest
-    steps:
       - name: get backlog field ID
         env:
           GITHUB_TOKEN: ${{ secrets.PERSONAL_TOKEN }}
@@ -79,6 +75,7 @@ jobs:
           echo 'ITEM_ID='$item_id >> $GITHUB_ENV
           
       - name: set fields
+        if: $IN_PROJECT == 0
         env:
           GITHUB_TOKEN: ${{ secrets.PERSONAL_TOKEN }}
         run: |

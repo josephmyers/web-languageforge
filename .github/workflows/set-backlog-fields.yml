@@ -75,7 +75,8 @@ jobs:
           echo 'ITEM_ID='$item_id >> $GITHUB_ENV
           
       - name: set fields
-        if: ${{ IN_PROJECT }} == 0
+        #if: ${{ IN_PROJECT }} == 0
+        if: ${{ GITHUB_TOKEN }}
         env:
           GITHUB_TOKEN: ${{ secrets.PERSONAL_TOKEN }}
         run: |

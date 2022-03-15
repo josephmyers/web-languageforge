@@ -17,8 +17,8 @@ jobs:
         run: |
           echo issue $ISSUE_NUMBER added to $REPO
           gh api graphql -f query='
-            query($repo_id:ID!, $issue_number:Int!) {
-              repository(name: $repo_id) {
+            query($issue_number:Int!) {
+              repository(name:"web-languageforge") {
                 issue(number: $issue_number) {
                   id
                   projectNextItems(first:100) {
@@ -28,7 +28,7 @@ jobs:
                   }
                 }
               }
-            }' -f repo_id=$REPO -f issue_number=$ISSUE_NUMBER > project_data.json
+            }' -f issue_number=$ISSUE_NUMBER > project_data.json
           
           echo 'IN_PROJECT='$(jq '.data.repository.issue.id.projectNextItems[] | length > 0) | length' project_data.json) >> $GITHUB_ENV
     

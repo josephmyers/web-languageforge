@@ -35,6 +35,7 @@ jobs:
             
           echo 'PROJECT_ID='$(jq '.data.user.projectNext.id' project_data.json) >> $GITHUB_ENV
           echo 'FIELD_ID='$(jq '.data.user.projectNext.fields.nodes[] | select(.name== "Backlog") | .id' project_data.json) >> $GITHUB_ENV
+          echo 'BACKLOG='$(jq '.data.user.projectNext.fields.nodes[] | select(.name== "Backlog")' project_data.json) >> $GITHUB_ENV
         
       - name: Add issue to project
         env:

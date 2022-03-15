@@ -18,7 +18,7 @@ jobs:
           echo issue $ISSUE_NUMBER added to $REPO
           gh api graphql -f query='
             query($issue_number:Int!) {
-              repository(name:"web-languageforge") {
+              repository(name:"web-languageforge", owner:"josephmyers") {
                 issue(number: $issue_number) {
                   id
                   projectNextItems(first:100) {

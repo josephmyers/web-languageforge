@@ -2,23 +2,45 @@ name: Add Issue to Project
 
 on:
   issues:
-    types: [ opened ] ############ exclude pull requests and items that already have a Project
-
-  workflow_dispatch:
+    types: [ opened ]
 
 jobs:
   steve:
     if: ${{ !github.event.issue.pull_request }}
     runs-on: ubuntu-latest
     steps:
-      - name: get backlog field ID
+      - name: is issue already on project
         env:
           GITHUB_TOKEN: ${{ secrets.PERSONAL_TOKEN }}
           ISSUE_NUMBER: ${{ github.event.issue.number }}
+          REPO: ${{ github.repository.id }}
+        run: |
+          echo issue $ISSUE_NUMBER added to $REPO
+          gh api graphql -f query='
+            query($repo_id:ID!, $issue_number:Int!) {
+              repository(name: $repo_id) {
+                issue(number: $issue_number) {
+                  id
+                  projectNextItems(first:100) {
+                    nodes {
+                      id
+                    }
+                  }
+                }
+              }
+            }' -f repo_id=$REPO -f issue_number=$ISSUE_NUMBER > project_data.json
+          
+          echo 'IN_PROJECT='$(jq '.data.repository.issue.id.projectNextItems[] | length > 0) | length' project_data.json) >> $GITHUB_ENV
+    
+  do_it:
+    if: $IN_PROJECT == 0
+    runs-on: ubuntu-latest
+    steps:
+      - name: get backlog field ID
+        env:
+          GITHUB_TOKEN: ${{ secrets.PERSONAL_TOKEN }}
           ORGANIZATION: josephmyers
         run: |
-          echo issue $ISSUE_NUMBER created
-          
           gh api graphql -f query='
             query($org: String!) {
               user(login: $org){

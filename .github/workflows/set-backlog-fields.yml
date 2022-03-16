@@ -13,7 +13,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.PERSONAL_TOKEN }}
           ISSUE_NUMBER: ${{ github.event.issue.number }}
-          REPO: ${{ toJson(github.repository) }}
+          REPO: ${{ toJson(github.event.repository.name) }}
         run: |
           echo issue $ISSUE_NUMBER added to $REPO
           gh api graphql -f query='

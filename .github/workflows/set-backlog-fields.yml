@@ -30,7 +30,7 @@ jobs:
               }
             }' -F issue_number=$ISSUE_NUMBER > project_data.json
           
-          echo 'IN_PROJECT='$(jq '.data.repository.issue.id.projectNextItems[] | length' project_data.json) >> $GITHUB_ENV
+          echo 'IN_PROJECT='$(jq '.data.repository.issue.projectNextItems[] | length' project_data.json) >> $GITHUB_ENV
     
       - name: get backlog field ID
         env:

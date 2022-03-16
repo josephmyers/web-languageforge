@@ -16,6 +16,8 @@ jobs:
       - name: trying to get this stupid obtuse mockery of an api hell to work
         env:
           GITHUB_TOKEN: ${{ steps.generate_token.outputs.token }}
+        run:
+          echo your mother into the ground
         
       - name: determine if issue is already on a project
         env:

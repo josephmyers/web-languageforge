@@ -9,7 +9,7 @@ jobs:
     if: ${{ !github.event.issue.pull_request }}
     runs-on: ubuntu-latest
     steps:
-      - name: is issue already on project
+      - name: determine if issue is already on a project
         env:
           GITHUB_TOKEN: ${{ secrets.PERSONAL_TOKEN }}
           ISSUE_NUMBER: ${{ github.event.issue.number }}
@@ -32,7 +32,7 @@ jobs:
           
           echo 'IN_PROJECT='$(jq '.data.repository.issue.projectNextItems[] | length' project_data.json) >> $GITHUB_ENV
     
-      - name: get backlog field ID
+      - name: get required info for set operations
         env:
           GITHUB_TOKEN: ${{ secrets.PERSONAL_TOKEN }}
           ORGANIZATION: josephmyers
@@ -61,8 +61,7 @@ jobs:
         if: env.IN_PROJECT == 0
         env:
           GITHUB_TOKEN: ${{ secrets.PERSONAL_TOKEN }}
-          CONTEXT_GITHUB: ${{ toJson(github) }}
-          ISSUE_ID: ${{ github.event.issue.node_id }}
+          ISSUE_ID: ${{ github.event.issue.node_id }} #use ITEM_ID for finding on projects
         run: |
           item_id="$( gh api graphql -f query='
             mutation($project:ID!, $item:ID!) {
@@ -75,13 +74,11 @@ jobs:
           
           echo 'ITEM_ID='$item_id >> $GITHUB_ENV
           
-      - name: set fields
+      - name: set Backlog field
         if: env.IN_PROJECT == 0
         env:
           GITHUB_TOKEN: ${{ secrets.PERSONAL_TOKEN }}
         run: |
-          echo issue added to project -- setting fields...
-        
           gh api graphql -f query='
             mutation(
               $project:ID!

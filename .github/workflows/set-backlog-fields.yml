@@ -28,7 +28,7 @@ jobs:
                   }
                 }
               }
-            }' -f issue_number=${{ env.ISSUE_NUMBER }} > project_data.json
+            }' -F issue_number=$ISSUE_NUMBER > project_data.json
           
           echo 'IN_PROJECT='$(jq '.data.repository.issue.id.projectNextItems[] | length' project_data.json) >> $GITHUB_ENV
     

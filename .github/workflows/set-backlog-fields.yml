@@ -54,8 +54,8 @@ jobs:
             }' -f org=$ORGANIZATION > project_data.json
             
           echo 'PROJECT_ID='$(jq '.data.user.projectNext.id' project_data.json) >> $GITHUB_ENV
-          echo 'FIELD_ID='$(jq '.data.user.projectNext.fields.nodes[] | select(.name== "Backlog") | .id' project_data.json) >> $GITHUB_ENV
-          echo 'TRIAGE_ID='$(jq '.data.user.projectNext.fields.nodes[] | select(.name== "Backlog") | .settings | fromjson.options[] | select(.name=="Triage") | .id' project_data.json) >> $GITHUB_ENV
+          echo 'FIELD_ID='$(jq '.data.user.projectNext.fields.nodes[] | select(.name== "ProductOwner") | .id' project_data.json) >> $GITHUB_ENV
+          echo 'TRIAGE_ID='$(jq '.data.user.projectNext.fields.nodes[] | select(.name== "ProductOwner") | .settings | fromjson.options[] | select(.name=="Triage") | .id' project_data.json) >> $GITHUB_ENV
         
       - name: Add issue to project
         if: env.IN_PROJECT == 0
